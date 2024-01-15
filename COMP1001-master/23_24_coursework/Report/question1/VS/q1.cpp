@@ -114,5 +114,27 @@ void routine2(float alpha, float beta) {
 }
 
 
+void routine1_vec(float alpha, float beta) {
+
+    unsigned int i;
+    __m256 alpha_new = _mm256_set1_ps(alpha);
+    __m256 beta_new = _m256_set1_ps(beta);
+    for (i = o; i < M; i += 8) {
+        __m256 y_new = _mm256_load_ps(&y[i]);
+        __m256 z_new = _mm256_load_ps(&z[i]);
+            beta_new = _mm256_mul_ps(beta_new, z_new);
+            alpha_new = _mm256_mul_ps(alpha_new, y_new);
+                 y_new = _mm256_add_ps(alpha_new, beta_new);
+                     _mm256_store_ps(&y[i], y_new)
+    }
 
 
+
+}
+
+void routine2_vec(float alpha, float beta){
+
+
+
+
+}
