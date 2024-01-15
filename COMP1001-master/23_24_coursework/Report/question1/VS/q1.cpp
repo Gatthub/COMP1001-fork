@@ -122,13 +122,13 @@ void routine1_vec(float alpha, float beta) {
     __m256 beta_loop = _mm256_set1_ps(beta);
     for (i = 0; i < M; i += 8) {
         __m256 y_loop = _mm256_load_ps(&y[i]);
-        __m256 z_loop = _mm256_load_ps(&z[i]);
+        __m256 z_loop = _mm256_load_ps(&z[i]); //loads the values from the array into a variable which can be used in the loop
         __m256 beta_loop = _mm256_set1_ps(beta);
-        __m256 alpha_loop = _mm256_set1_ps(alpha);
-        beta_loop = _mm256_mul_ps(beta_loop, z_loop);
-        alpha_loop = _mm256_mul_ps(alpha_loop, y_loop);
-        y_loop = _mm256_add_ps(alpha_loop, beta_loop);
-        _mm256_store_ps(&y[i], y_loop);
+        __m256 alpha_loop = _mm256_set1_ps(alpha); //resets the values of alpha_loop and beta_loop so it uses the right values in the future calculations rather than the value previously set to them in the last loop
+        beta_loop = _mm256_mul_ps(beta_loop, z_loop); //Multiplies beta and z[i] and stores it into the beta_loop variable
+        alpha_loop = _mm256_mul_ps(alpha_loop, y_loop);//multiplies alpha and y[i] and stores it into the alpha_loop variable
+        y_loop = _mm256_add_ps(alpha_loop, beta_loop); //adds the previous two results together and stores it into the y_loop variable
+        _mm256_store_ps(&y[i], y_loop); //Finally the result of the equation is stored into the corresponding value in the array
     }
 
 
@@ -136,8 +136,20 @@ void routine1_vec(float alpha, float beta) {
 }
 
 void routine2_vec(float alpha, float beta){
+    unsigned int i;
+    unsigned int j;
+    __m256 alpha_loop = _mm256_set1_ps(alpha);
+    __m256 beta_loop = _mm256_set1_ps(beta);
+     for (i = 0; i < N; i++) {
+         __m256 w_loop = _mm256_load_ps(&w[i]);
+
+         for (j = 0; j < N; j += 8) {
+             __m256 A_loop = _mm256_load_ps(&A[i][j]);
+             __m256 x_loop = _mm256_load_ps(&x[j]);
+
+         }
 
 
-
+    }
 
 }
