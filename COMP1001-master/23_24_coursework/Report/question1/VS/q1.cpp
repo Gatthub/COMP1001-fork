@@ -28,7 +28,8 @@
 void initialize();
 void routine1(float alpha, float beta);
 void routine2(float alpha, float beta);
-
+void routine1_vec(float alpha, float beta);
+void routine2_vec(float alpha, float beta);
 __declspec(align(64)) float  y[M], z[M] ;
 __declspec(align(64)) float A[N][N], x[N], w[N];
 
@@ -117,15 +118,17 @@ void routine2(float alpha, float beta) {
 void routine1_vec(float alpha, float beta) {
 
     unsigned int i;
-    __m256 alpha_new = _mm256_set1_ps(alpha);
-    __m256 beta_new = _m256_set1_ps(beta);
-    for (i = o; i < M; i += 8) {
-        __m256 y_new = _mm256_load_ps(&y[i]);
-        __m256 z_new = _mm256_load_ps(&z[i]);
-            beta_new = _mm256_mul_ps(beta_new, z_new);
-            alpha_new = _mm256_mul_ps(alpha_new, y_new);
-                 y_new = _mm256_add_ps(alpha_new, beta_new);
-                     _mm256_store_ps(&y[i], y_new)
+    __m256 alpha_loop = _mm256_set1_ps(alpha);
+    __m256 beta_loop = _mm256_set1_ps(beta);
+    for (i = 0; i < M; i += 8) {
+        __m256 y_loop = _mm256_load_ps(&y[i]);
+        __m256 z_loop = _mm256_load_ps(&z[i]);
+        __m256 beta_loop = _mm256_set1_ps(beta);
+        __m256 alpha_loop = _mm256_set1_ps(alpha);
+        beta_loop = _mm256_mul_ps(beta_loop, z_loop);
+        alpha_loop = _mm256_mul_ps(alpha_loop, y_loop);
+        y_loop = _mm256_add_ps(alpha_loop, beta_loop);
+        _mm256_store_ps(&y[i], y_loop);
     }
 
 
