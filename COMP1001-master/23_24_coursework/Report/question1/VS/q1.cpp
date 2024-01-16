@@ -46,7 +46,7 @@ int main() {
 
     for (t = 0; t < TIMES1; t++)
         routine1(alpha, beta);
-
+        
     run_time = omp_get_wtime() - start_time; //end timer
     printf("\n Time elapsed is %f secs \n %e FLOPs achieved\n", run_time, (double)(ARITHMETIC_OPERATIONS1) / ((double)run_time / TIMES1));
 
@@ -146,10 +146,12 @@ void routine2_vec(float alpha, float beta){
          for (j = 0; j < N; j += 8) {
              __m256 A_loop = _mm256_load_ps(&A[i][j]);
              __m256 x_loop = _mm256_load_ps(&x[j]);
-
+              A_loop = _mm256_mul_ps(A_loop, x_loop);
+              alpha_loop = _mm256_mul_ps(alpha_loop, A_loop);
+              w_loop = _mm256_add_ps(w_loop, alpha_loop);
          }
-
-
+         w_loop = _mm256_sub_ps(w_loop, beta_loop);
+         _mm256_store_ps(&w[i], w_loop);
     }
 
 }
